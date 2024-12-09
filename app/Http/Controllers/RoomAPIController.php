@@ -3,31 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\HotelRoom;
-use Illuminate\Http\Request;
 
 class RoomAPIController extends Controller
 {
     public function index()
     {
         $rooms = HotelRoom::with('type')->get();
-        return $rooms;
-    }
-public function single(int $id)
-{
-    $room = HotelRoom::with('type')->find($id);
 
-    if (!$room) {
         return response()->json([
-            'message' => "Room $id not found",
-            'success' => false
-        ],404);
+            'message' => 'Rooms successfully retrieved',
+            'data' => $rooms,
+        ], 200);
     }
-    else{
-        return response()->json([
-            'message' => 'Room found',
-            'success' => true,
-            'data' => $room
-        ],200);
+
+    public function single(int $id)
+    {
+        $room = HotelRoom::with('type')->find($id);
+
+        if (! $room) {
+            return response()->json([
+                'message' => "Room with id $id not found",
+            ], 404);
+        } else {
+            return response()->json([
+                'message' => 'Room successfully retrieved',
+                'data' => $room,
+            ], 200);
+        }
     }
-}
 }
