@@ -9,7 +9,7 @@ class RoomAPIController extends Controller
 {
 public function single(int $id)
 {
-    $room = HotelRoom::find($id);
+    $room = HotelRoom::with('type')->find($id);
 
     if (!$room) {
         return response()->json([
@@ -21,7 +21,7 @@ public function single(int $id)
         return response()->json([
             'message' => 'Room found',
             'success' => true,
-            'data' => $room,
+            'data' => $room
         ],200);
     }
 }

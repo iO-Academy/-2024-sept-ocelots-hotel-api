@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HotelRoom extends Model
 {
-    public function room_types(): BelongsTo
+    public function type(): BelongsTo
     {
-        return $this->belongsTo(RoomType::class);
+        return $this->belongsTo(Type::class);
     }
 }
