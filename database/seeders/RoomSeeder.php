@@ -15,7 +15,7 @@ class RoomSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
         for ($i = 0; $i < 5; $i++) {
-            DB::table('rooms')->insert([
+            DB::table('hotel_rooms')->insert([
                 'name' => $faker->word(),
                 'image'=> $faker->imageUrl(),
                 'min_capacity' => rand(1, 3),
