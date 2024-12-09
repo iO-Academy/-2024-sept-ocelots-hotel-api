@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 
 class RoomAPIController extends Controller
 {
+    public function index()
+    {
+        $rooms = HotelRoom::with('type')->all;
+
+        return $rooms;
+    }
 public function single(int $id)
 {
     $room = HotelRoom::with('type')->find($id);
