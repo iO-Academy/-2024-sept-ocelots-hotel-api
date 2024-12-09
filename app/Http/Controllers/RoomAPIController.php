@@ -9,8 +9,7 @@ class RoomAPIController extends Controller
 {
     public function index()
     {
-        $rooms = HotelRoom::with('type')->all;
-
+        $rooms = HotelRoom::with('type')->get();
         return $rooms;
     }
 public function single(int $id)
