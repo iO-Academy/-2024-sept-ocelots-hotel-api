@@ -16,7 +16,6 @@ class BookingAPIController extends Controller
             ->get()
             ->makeHidden(['guests']);
 
-
         return response()->json([
             'message' => 'Rooms successfully retrieved',
             'data' => $bookings
