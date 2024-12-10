@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\DateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -27,22 +28,44 @@ class BookingAPIController extends Controller
         $request->validate([
             'room_id' => 'required|exists:hotel_rooms,id',
             'customer' => 'required|string|max:255',
-            'guests' => 'required|integer',
-            'start' => 'required|date',
+            'guests' => 'required|integer|min:1',
+            'start' => 'required|date|',
             'end' => 'required|date'
         ]);
 
-        $booking = new Booking();
-        $booking->room_id=$request->room_id;
-        $booking->customer=$request->customer;
-        $booking->guests=$request->guests;
-        $booking->start=$request->start;
-        $booking->end=$request->end;
-        $booking->save();
 
-        return response()->json([
-            'message' => 'Booking successfully created',
-            'data' => $booking,
-        ], 201);
+        $booking = new Booking();
+        $booking->room_id = $request->room_id;
+        $booking->customer = $request->customer;
+        $booking->guests = $request->guests;
+        $booking->start = $request->start;
+        $booking->end = $request->end;
+        if (DateService::futureDate($booking->start) == false) {
+            return response()->json([
+                'message' => 'Start date must be in the future',
+            ], 400);
+        }
+
+        if (DateService::validEndDate($booking->start, $booking->end) == false) {
+            return response()->json([
+                'message' => 'Start date must be before the end date',
+            ], 400);
+        }
+
+        $existingBookings = Booking::where('room_id', $booking->room_id);
+        foreach ($existingBookings as $existingBooking) {
+            if (DateService::availableDate($existingBooking, $booking) == false) {
+                return response()->json([
+                    'message' => 'Room unavailable for the chosen dates',
+                ], 400);
+            }
+        }
+            $booking->save();
+
+            return response()->json([
+                'message' => 'Booking successfully created',
+                'data' => $booking,
+            ], 201);
+        }
     }
-}
+
