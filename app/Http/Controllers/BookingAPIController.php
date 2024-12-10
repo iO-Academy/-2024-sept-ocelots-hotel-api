@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class BookingAPIController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with('hotel_room')->get();
+        $bookings = Booking::with('room:id,name')
+            ->where('start', '>=', now())
+            ->orderBy('start', 'asc')
+            ->get()
+            ->makeHidden(['guests']);
+
 
         return response()->json([
             'message' => 'Rooms successfully retrieved',
-            'data' => $bookings,
+            'data' => $bookings
         ], 201);
     }
 
