@@ -31,6 +31,4 @@ class RoomAPIController extends Controller
             ], 200);
         }
     }
-
-
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Services\DateService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class BookingAPIController extends Controller
 {
@@ -19,7 +18,7 @@ class BookingAPIController extends Controller
 
         return response()->json([
             'message' => 'Rooms successfully retrieved',
-            'data' => $bookings
+            'data' => $bookings,
         ], 201);
     }
 
@@ -30,11 +29,10 @@ class BookingAPIController extends Controller
             'customer' => 'required|string|max:255',
             'guests' => 'required|integer|min:1',
             'start' => 'required|date|',
-            'end' => 'required|date'
+            'end' => 'required|date',
         ]);
 
-
-        $booking = new Booking();
+        $booking = new Booking;
         $booking->room_id = $request->room_id;
         $booking->customer = $request->customer;
         $booking->guests = $request->guests;
@@ -60,12 +58,11 @@ class BookingAPIController extends Controller
                 ], 400);
             }
         }
-            $booking->save();
+        $booking->save();
 
-            return response()->json([
-                'message' => 'Booking successfully created',
-                'data' => $booking,
-            ], 201);
-        }
+        return response()->json([
+            'message' => 'Booking successfully created',
+            'data' => $booking,
+        ], 201);
     }
-
+}

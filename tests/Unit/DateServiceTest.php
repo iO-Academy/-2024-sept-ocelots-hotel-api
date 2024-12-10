@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class DateServiceTest extends TestCase
 {
-    public function testValidEndDateGood()
+    public function test_valid_end_date_good()
     {
         $inputStartDate = '2025-04-15';
         $inputEndDate = '2025-04-30';
@@ -17,7 +17,7 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedGood, $actualGood);
     }
 
-    public function testValidEndDateBad()
+    public function test_valid_end_date_bad()
     {
         $inputStartDate = '2025-04-15';
         $inputEndDate = '2024-04-30';
@@ -26,7 +26,7 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedBad, $actualBad);
     }
 
-    public function testValidEndDateInvalid()
+    public function test_valid_end_date_invalid()
     {
         $inputStartDate = 'no';
         $inputEndDate = 'whelp';
@@ -35,7 +35,7 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedInvalid, $actualInvalid);
     }
 
-    public function testFutureDateGood()
+    public function test_future_date_good()
     {
         $inputGoodFutureDate = '2200-04-16';
         $actualGood = DateService::futureDate($inputGoodFutureDate);
@@ -43,7 +43,7 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedGood, $actualGood);
     }
 
-    public function testFutureDateBad()
+    public function test_future_date_bad()
     {
         $inputBadFutureDate = '2010-03-05';
         $actualBad = DateService::futureDate($inputBadFutureDate);
@@ -51,7 +51,7 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedBad, $actualBad);
     }
 
-    public function testFutureDateNotDate()
+    public function test_future_date_not_date()
     {
         $inputNotDate = 'gloob';
         $actualNotDate = DateService::futureDate($inputNotDate);
@@ -59,25 +59,24 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedNotDate, $actualNotDate);
     }
 
-    public function testAvailableDateGood()
+    public function test_available_date_good()
     {
-        $fakeConfirmedBooking = new Booking();
-        $fakeAttemptedBooking = new Booking();
+        $fakeConfirmedBooking = new Booking;
+        $fakeAttemptedBooking = new Booking;
         $fakeConfirmedBooking->start = '2025-04-15';
         $fakeConfirmedBooking->end = '2025-04-30';
         $fakeAttemptedBooking->start = '2025-05-20';
         $fakeAttemptedBooking->end = '2025-05-30';
-
 
         $actualGood = DateService::availableDate($fakeConfirmedBooking, $fakeAttemptedBooking);
         $expectedGood = true;
         $this->assertEquals($expectedGood, $actualGood);
     }
 
-    public function testAvailableDateBadStart()
+    public function test_available_date_bad_start()
     {
-        $fakeConfirmedBooking = new Booking();
-        $fakeAttemptedBooking = new Booking();
+        $fakeConfirmedBooking = new Booking;
+        $fakeAttemptedBooking = new Booking;
         $fakeConfirmedBooking->start = '2025-04-15';
         $fakeConfirmedBooking->end = '2025-04-30';
         $fakeAttemptedBooking->start = '2025-04-20';
@@ -87,10 +86,10 @@ class DateServiceTest extends TestCase
         $this->assertEquals($expectedBadStart, $actualBadStart);
     }
 
-    public function testAvailableDateBadEnd()
+    public function test_available_date_bad_end()
     {
-        $fakeConfirmedBooking = new Booking();
-        $fakeAttemptedBooking = new Booking();
+        $fakeConfirmedBooking = new Booking;
+        $fakeAttemptedBooking = new Booking;
         $fakeConfirmedBooking->start = '2025-04-15';
         $fakeConfirmedBooking->end = '2025-04-30';
         $fakeAttemptedBooking->start = '2025-03-20';
