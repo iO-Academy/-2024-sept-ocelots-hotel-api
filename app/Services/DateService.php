@@ -7,7 +7,7 @@ use Carbon\Laravel\ServiceProvider;
 
 class DateService extends ServiceProvider
 {
-    public function validEndDate(string $startDate, string $endDate): bool
+    public static function validEndDate(string $startDate, string $endDate): bool
     {
         $timestampStart = strtotime($startDate);
         $timestampEnd = strtotime($endDate);
@@ -20,11 +20,11 @@ class DateService extends ServiceProvider
         }
     }
 
-    public function futureDate(string $futureDate): bool
+    public static function futureDate(string $futureDate): bool
     {
 //        time() > strtotime($futureDate) ? true : false;
 //        return time() > strtotime($futureDate);
-        if (time() > strtotime($futureDate))
+        if (time() < strtotime($futureDate))
         {
             return true;
         } else {
@@ -32,7 +32,7 @@ class DateService extends ServiceProvider
         }
     }
 
-    public function availableDate(Booking $confirmedBooking, Booking $attemptedBooking): bool
+    public static function availableDate(Booking $confirmedBooking, Booking $attemptedBooking): bool
     {
         $confirmedStart = strtotime($confirmedBooking->start);
         $confirmedEnd = strtotime($confirmedBooking->end);
