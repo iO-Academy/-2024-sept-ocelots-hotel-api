@@ -13,10 +13,10 @@ class DateService extends ServiceProvider
         $timestampEnd = strtotime($endDate);
 //  $timestampStart > $timestampEnd ? false : true;
 //        return $timestampStart < $timestampEnd;
-        if ($timestampStart > $timestampEnd) {
-            return false;
-        } else {
+        if ($timestampStart < $timestampEnd) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -39,11 +39,18 @@ class DateService extends ServiceProvider
         $attemptedStart = strtotime($attemptedBooking->start);
         $attemptedEnd = strtotime($attemptedBooking->end);
 
-        if ($attemptedStart > $confirmedStart && $attemptedStart < $confirmedEnd)
-        {
+//        if (
+//            ($attemptedStart >= $confirmedStart && $attemptedStart <= $confirmedEnd)
+//            || ($attemptedEnd <= $confirmedEnd && $attemptedEnd >= $confirmedStart)
+//        ) {
+//            return false;
+//        }
+//
+//        return true;
+
+        if ($attemptedStart >= $confirmedStart && $attemptedStart <= $confirmedEnd) {
             return false;
-        } else if ($attemptedEnd > $confirmedStart && $attemptedEnd < $confirmedEnd)
-        {
+        } else if ($attemptedEnd >= $confirmedStart && $attemptedEnd <= $confirmedEnd) {
             return false;
         } else {
             return true;
