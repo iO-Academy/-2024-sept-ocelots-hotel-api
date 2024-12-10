@@ -52,7 +52,7 @@ class BookingAPIController extends Controller
             ], 400);
         }
 
-        $existingBookings = Booking::where('room_id', $booking->room_id);
+        $existingBookings = Booking::where('room_id', $booking->room_id)->get();
         foreach ($existingBookings as $existingBooking) {
             if (DateService::availableDate($existingBooking, $booking) == false) {
                 return response()->json([
