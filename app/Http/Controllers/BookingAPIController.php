@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\HotelRoom;
 use App\Services\DateService;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,20 @@ class BookingAPIController extends Controller
 {
     public function index(Request $request)
     {
+        $roomCount = HotelRoom::max('id');
+
+        if ($request->room_id > $roomCount ){
+            $bookings = Booking::with('room:id,name')
+                ->where('start', '>=', now())
+                ->where('room_id', '=', $request->room_id)
+                ->orderBy('start', 'asc')
+                ->get()
+                ->makeHidden(['guests']);
+
+            return response()->json([
+                'message' => "The selected room id is invalid."
+            ], 422);
+        }
         if ($request->room_id){
             $bookings = Booking::with('room:id,name')
                 ->where('start', '>=', now())
@@ -32,7 +47,7 @@ class BookingAPIController extends Controller
 
         return response()->json([
             'message' => 'Bookings successfully retrieved',
-            'data' => $bookings
+            'data' => $bookings,
             'message' => 'Rooms successfully retrieved',
             'data' => $bookings,
         ], 201);
