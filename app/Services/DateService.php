@@ -11,8 +11,8 @@ class DateService extends ServiceProvider
     {
         $timestampStart = strtotime($startDate);
         $timestampEnd = strtotime($endDate);
-//  $timestampStart > $timestampEnd ? false : true;
-//        return $timestampStart < $timestampEnd;
+        //  $timestampStart > $timestampEnd ? false : true;
+        //        return $timestampStart < $timestampEnd;
         if ($timestampStart < $timestampEnd) {
             return true;
         } else {
@@ -22,10 +22,9 @@ class DateService extends ServiceProvider
 
     public static function futureDate(string $futureDate): bool
     {
-//        time() > strtotime($futureDate) ? true : false;
-//        return time() > strtotime($futureDate);
-        if (time() < strtotime($futureDate))
-        {
+        //        time() > strtotime($futureDate) ? true : false;
+        //        return time() > strtotime($futureDate);
+        if (time() < strtotime($futureDate)) {
             return true;
         } else {
             return false;
@@ -39,18 +38,18 @@ class DateService extends ServiceProvider
         $attemptedStart = strtotime($attemptedBooking->start);
         $attemptedEnd = strtotime($attemptedBooking->end);
 
-//        if (
-//            ($attemptedStart >= $confirmedStart && $attemptedStart <= $confirmedEnd)
-//            || ($attemptedEnd <= $confirmedEnd && $attemptedEnd >= $confirmedStart)
-//        ) {
-//            return false;
-//        }
-//
-//        return true;
+        //        if (
+        //            ($attemptedStart >= $confirmedStart && $attemptedStart <= $confirmedEnd)
+        //            || ($attemptedEnd <= $confirmedEnd && $attemptedEnd >= $confirmedStart)
+        //        ) {
+        //            return false;
+        //        }
+        //
+        //        return true;
 
         if ($attemptedStart >= $confirmedStart && $attemptedStart <= $confirmedEnd) {
             return false;
-        } else if ($attemptedEnd >= $confirmedStart && $attemptedEnd <= $confirmedEnd) {
+        } elseif ($attemptedEnd >= $confirmedStart && $attemptedEnd <= $confirmedEnd) {
             return false;
         } else {
             return true;

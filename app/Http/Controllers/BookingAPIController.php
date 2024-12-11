@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Services\DateService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class BookingAPIController extends Controller
 {
@@ -29,11 +28,13 @@ class BookingAPIController extends Controller
             ->where('start', '>=', now())
             ->orderBy('start', 'asc')
             ->get()
-            ->makeHidden(['guests']);
+            ->makeHidden(['guests', 'room_id']);
 
         return response()->json([
             'message' => 'Bookings successfully retrieved',
             'data' => $bookings
+            'message' => 'Rooms successfully retrieved',
+            'data' => $bookings,
         ], 201);
     }
 
@@ -44,11 +45,10 @@ class BookingAPIController extends Controller
             'customer' => 'required|string|max:255',
             'guests' => 'required|integer|min:1',
             'start' => 'required|date|',
-            'end' => 'required|date'
+            'end' => 'required|date',
         ]);
 
-
-        $booking = new Booking();
+        $booking = new Booking;
         $booking->room_id = $request->room_id;
         $booking->customer = $request->customer;
         $booking->guests = $request->guests;
@@ -66,7 +66,7 @@ class BookingAPIController extends Controller
             ], 400);
         }
 
-        $existingBookings = Booking::where('room_id', $booking->room_id);
+        $existingBookings = Booking::where('room_id', $booking->room_id)->get();
         foreach ($existingBookings as $existingBooking) {
             if (DateService::availableDate($existingBooking, $booking) == false) {
                 return response()->json([
@@ -74,12 +74,11 @@ class BookingAPIController extends Controller
                 ], 400);
             }
         }
-            $booking->save();
+        $booking->save();
 
-            return response()->json([
-                'message' => 'Booking successfully created',
-                'data' => $booking,
-            ], 201);
-        }
+        return response()->json([
+            'message' => 'Booking successfully created',
+            'data' => $booking,
+        ], 201);
     }
-
+}

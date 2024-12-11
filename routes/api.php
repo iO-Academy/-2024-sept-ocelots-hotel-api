@@ -12,5 +12,5 @@ Route::get('/user', function (Request $request) {
 Route::get('/rooms', [RoomAPIController::class, 'index']);
 Route::get('/rooms/{id}', [RoomAPIController::class, 'single']);
 
-Route::get('/bookings', [BookingAPIController ::class, 'index']);
-Route::post('/bookings', [BookingAPIController ::class, 'create']);
+Route::get('/bookings', [BookingAPIController::class, 'index']);
+Route::post('/bookings', [BookingAPIController::class, 'create']);
