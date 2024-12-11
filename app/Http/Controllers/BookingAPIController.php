@@ -11,20 +11,8 @@ class BookingAPIController extends Controller
 {
     public function index(Request $request)
     {
-        $roomCount = HotelRoom::max('id');
+        $request->validate(['room_id' => 'required|exists:hotel_rooms,id']);
 
-        if ($request->room_id > $roomCount ){
-            $bookings = Booking::with('room:id,name')
-                ->where('start', '>=', now())
-                ->where('room_id', '=', $request->room_id)
-                ->orderBy('start', 'asc')
-                ->get()
-                ->makeHidden(['guests']);
-
-            return response()->json([
-                'message' => "The selected room id is invalid."
-            ], 422);
-        }
         if ($request->room_id){
             $bookings = Booking::with('room:id,name')
                 ->where('start', '>=', now())

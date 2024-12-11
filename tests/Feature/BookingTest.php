@@ -36,7 +36,24 @@ class BookingTest extends TestCase
     });
     }
 
-    public function test_getSingleBooking_success(): void
+    public function test_GetBookingByRoom_success(): void
+    {
+        $booking = Booking::factory()->create();
+        $booking->start='2080-12-31';
+        $booking->end='2100-12-31';
+        $booking->save();
+//        HotelRoom::factory()->create();
+        $response = $this->getJson('/api/bookings?room_id=1');
+        $response->assertStatus(201)
+            ->assertJson(function(AssertableJson $json) {
+                $json->hasAll(['message', 'data'])
+                    ->has('data', 1, function(AssertableJson $data) {
+                        $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'updated_at', 'room']);
+                    });
+            });
+    }
+
+    public function test_createBooking_success(): void
     {
         Booking::factory()->create();
         HotelRoom::factory()->create();
