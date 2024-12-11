@@ -16,7 +16,7 @@ class BookingServiceTest extends TestCase
         $fakeRoom->max_capacity = 5;
         $fakeGuests = 4;
 
-        $actualGood = BookingService::checkRoomCapacity($fakeRoom, $fakeGuests);
+        $actualGood = BookingService::isRoomCapacityValid($fakeRoom, $fakeGuests);
         $expectedGood = true;
         $this->assertEquals($expectedGood, $actualGood);
     }
@@ -28,7 +28,7 @@ class BookingServiceTest extends TestCase
         $fakeRoom->max_capacity = 5;
         $fakeGuests = 2;
 
-        $actualLow = BookingService::checkRoomCapacity($fakeRoom, $fakeGuests);
+        $actualLow = BookingService::isRoomCapacityValid($fakeRoom, $fakeGuests);
         $expectedLow = false;
         $this->assertEquals($expectedLow, $actualLow);
     }
@@ -40,7 +40,7 @@ class BookingServiceTest extends TestCase
         $fakeRoom->max_capacity = 5;
         $fakeGuests = 7;
 
-        $actualHigh = BookingService::checkRoomCapacity($fakeRoom, $fakeGuests);
+        $actualHigh = BookingService::isRoomCapacityValid($fakeRoom, $fakeGuests);
         $expectedHigh = false;
         $this->assertEquals($expectedHigh, $actualHigh);
     }

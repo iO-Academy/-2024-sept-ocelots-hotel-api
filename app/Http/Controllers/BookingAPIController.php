@@ -70,11 +70,12 @@ class BookingAPIController extends Controller
                 'message' => 'Start date must be before the end date',
             ], 400);
         }
-            if (BookingService::checkRoomCapacity($bookedRoom, $booking->guests)) {
-                return response()->json([
-                    'message' => "The {$bookedRoom->name} room can only accommodate between {$bookedRoom->min_capacity} and {$bookedRoom->max_capacity} guests",
-                ], 400);
-            }
+
+        if (!BookingService::isRoomCapacityValid($bookedRoom, $booking->guests)) {
+            return response()->json([
+                'message' => "The {$bookedRoom->name} room can only accommodate between {$bookedRoom->min_capacity} and {$bookedRoom->max_capacity} guests",
+            ], 400);
+        }
 
         $existingBookings = Booking::where('room_id', $booking->room_id)->get();
         foreach ($existingBookings as $existingBooking) {

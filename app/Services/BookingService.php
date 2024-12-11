@@ -7,11 +7,12 @@ use Carbon\Laravel\ServiceProvider;
 
 class BookingService extends ServiceProvider
 {
-    public static function checkRoomCapacity(HotelRoom $room, int $guests): bool
+    public static function isRoomCapacityValid(HotelRoom $room, int $guests): bool
     {
         $minCapacity = $room->min_capacity;
         $maxCapacity = $room->max_capacity;
 
+//        dd($maxCapacity);
         if ($guests < $minCapacity)
         {
             return false;

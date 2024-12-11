@@ -56,12 +56,13 @@ class BookingTest extends TestCase
 
     public function test_createBooking_success(): void
     {
-        Booking::factory()->create();
+        HotelRoom::factory()->create();
+        HotelRoom::factory()->create();
 
         $testData = [
-                "room_id" => "1",
+                "room_id" => "2",
               "customer" => "Dave",
-              "guests" => "1",
+              "guests" => "3",
               "start" => "2080-01-01",
               "end" => "2081-01-01"
         ];
