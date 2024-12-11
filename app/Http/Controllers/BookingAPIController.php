@@ -8,8 +8,22 @@ use Illuminate\Http\Request;
 
 class BookingAPIController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->room_id){
+            $bookings = Booking::with('room:id,name')
+                ->where('start', '>=', now())
+                ->where('room_id', '=', $request->room_id)
+                ->orderBy('start', 'asc')
+                ->get()
+                ->makeHidden(['guests']);
+
+            return response()->json([
+                'message' => 'Bookings successfully retrieved',
+                'data' => $bookings
+            ], 201);
+        }
+
         $bookings = Booking::with('room:id,name')
             ->where('start', '>=', now())
             ->orderBy('start', 'asc')
@@ -17,6 +31,8 @@ class BookingAPIController extends Controller
             ->makeHidden(['guests', 'room_id']);
 
         return response()->json([
+            'message' => 'Bookings successfully retrieved',
+            'data' => $bookings
             'message' => 'Rooms successfully retrieved',
             'data' => $bookings,
         ], 201);
