@@ -24,9 +24,9 @@ class HotelRoomTest extends TestCase
                 $json->hasAll(['message', 'data'])
                     ->has('data',1, function (AssertableJson $data) {
                         $data->hasAll(['id', 'name', 'image', 'min_capacity', 'max_capacity',
-                            'type']);
-//                            ->whereAllType([
-//                            'id', 'name', 'image', 'min_capacity', 'max_capacity']);
+                            'type'])
+                            ->whereAllType([
+                            'id'=> 'integer', 'name'=>'string', 'image'=>'string', 'min_capacity' => 'integer', 'max_capacity'=>'integer']);
                     });
             });
 
