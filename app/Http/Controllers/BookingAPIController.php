@@ -63,7 +63,7 @@ class BookingAPIController extends Controller
                 'message' => 'Start date must be in the future',
             ], 400);
         }
-        $bookedRoom = HotelRoom::where('id', '=', $booking->room_id);
+        $bookedRoom = HotelRoom::find($request->room_id);
 
         if (DateService::validEndDate($booking->start, $booking->end) == false) {
             return response()->json([
