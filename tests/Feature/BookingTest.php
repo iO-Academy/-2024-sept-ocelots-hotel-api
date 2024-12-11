@@ -42,7 +42,17 @@ class BookingTest extends TestCase
         HotelRoom::factory()->create();
 
         $testData = [
-
-        ]
+                "room_id" => "1",
+              "customer" => "Dave",
+              "guests" => "1",
+              "start" => "2080-01-01",
+              "end" => "2081-01-01"
+        ];
+        $response = $this->postJson('/api/bookings', $testData);
+        $response->assertStatus(201)
+            ->assertJson(function(AssertableJson $json) {
+                $json->hasAll(['message', 'data']);
+            });
+        $this->assertDatabaseHas('bookings', $testData);
     }
 }
