@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\HotelRoom;
+use App\Services\BookingService;
 use App\Services\DateService;
 use Illuminate\Http\Request;
 
@@ -62,12 +63,18 @@ class BookingAPIController extends Controller
                 'message' => 'Start date must be in the future',
             ], 400);
         }
+        $bookedRoom = HotelRoom::where('id', '=', $booking->room_id);
 
         if (DateService::validEndDate($booking->start, $booking->end) == false) {
             return response()->json([
                 'message' => 'Start date must be before the end date',
             ], 400);
         }
+            if (BookingService::checkRoomCapacity($bookedRoom, $booking->guests)) {
+                return response()->json([
+                    'message' => "The {$bookedRoom->name} room can only accommodate between {$bookedRoom->min_capacity} and {$bookedRoom->max_capacity} guests",
+                ], 400);
+            }
 
         $existingBookings = Booking::where('room_id', $booking->room_id)->get();
         foreach ($existingBookings as $existingBooking) {
