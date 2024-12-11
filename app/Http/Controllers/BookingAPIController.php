@@ -11,7 +11,7 @@ class BookingAPIController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate(['room_id' => 'required|exists:hotel_rooms,id']);
+        $request->validate(['room_id' => 'nullable|exists:hotel_rooms,id']);
 
         if ($request->room_id){
             $bookings = Booking::with('room:id,name')
@@ -19,7 +19,7 @@ class BookingAPIController extends Controller
                 ->where('room_id', '=', $request->room_id)
                 ->orderBy('start', 'asc')
                 ->get()
-                ->makeHidden(['guests']);
+                ->makeHidden(['guests', 'room_id']);
 
             return response()->json([
                 'message' => 'Bookings successfully retrieved',

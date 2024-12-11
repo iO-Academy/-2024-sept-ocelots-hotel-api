@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,12 +18,11 @@ class HotelRoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => rand(1, 20),
             'name' => $this->faker->word(),
             'image' => $this->faker->imageUrl(),
             'min_capacity' => rand(1, 3),
             'max_capacity' => rand(3, 6),
-            'type_id' => rand(1, 3),
+            'type_id' => Type::factory(),
         ];
     }
 }

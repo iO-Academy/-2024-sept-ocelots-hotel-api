@@ -42,6 +42,7 @@ class BookingTest extends TestCase
         $booking->start='2080-12-31';
         $booking->end='2100-12-31';
         $booking->save();
+
 //        HotelRoom::factory()->create();
         $response = $this->getJson('/api/bookings?room_id=1');
         $response->assertStatus(201)
@@ -56,7 +57,6 @@ class BookingTest extends TestCase
     public function test_createBooking_success(): void
     {
         Booking::factory()->create();
-        HotelRoom::factory()->create();
 
         $testData = [
                 "room_id" => "1",
