@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Booking extends Model
 {
     use HasFactory;
+
     public function room(): BelongsTo
     {
         return $this->belongsTo(HotelRoom::class, 'room_id');

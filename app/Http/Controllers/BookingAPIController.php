@@ -14,7 +14,7 @@ class BookingAPIController extends Controller
             ->where('start', '>=', now())
             ->orderBy('start', 'asc')
             ->get()
-            ->makeHidden(['guests']);
+            ->makeHidden(['guests', 'room_id']);
 
         return response()->json([
             'message' => 'Rooms successfully retrieved',

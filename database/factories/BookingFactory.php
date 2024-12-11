@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\HotelRoom;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,11 +18,11 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-            'room_id' => rand(1, 5),
-            'customer'=> $this->faker->name(),
-            'guests'=> rand(1, 5),
-            'start'=>$this->faker->date(),
-            'end'=>$this->faker->date(),
+            'customer' => $this->faker->name(),
+            'room_id' => HotelRoom::factory(),
+            'guests' => 3,
+            'start' => $this->faker->date(),
+            'end' => $this->faker->date(),
         ];
     }
 }

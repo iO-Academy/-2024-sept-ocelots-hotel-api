@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Type extends Model
 {
     use HasFactory;
+
     public $hidden = ['created_at', 'updated_at'];
 
     public function hotel_rooms(): HasMany

@@ -22,7 +22,7 @@ class HotelRoomFactory extends Factory
             'image' => $this->faker->imageUrl(),
             'min_capacity' => rand(1, 3),
             'max_capacity' => rand(3, 6),
-            'type_id' => rand(1, 3)
+            'type_id' => rand(1, 3),
         ];
     }
 }
