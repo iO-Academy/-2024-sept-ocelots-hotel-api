@@ -14,31 +14,20 @@ class BookingAPIController extends Controller
     {
         $request->validate(['room_id' => 'nullable|exists:hotel_rooms,id']);
 
-        if ($request->room_id){
-            $bookings = Booking::with('room:id,name')
-                ->where('start', '>=', now())
-                ->where('room_id', '=', $request->room_id)
-                ->orderBy('start', 'asc')
-                ->get()
-                ->makeHidden(['guests', 'room_id']);
 
-            return response()->json([
-                'message' => 'Bookings successfully retrieved',
-                'data' => $bookings
-            ], 201);
-        }
-
-        $bookings = Booking::with('room:id,name')
+        $query = Booking::with('room:id,name')
             ->where('start', '>=', now())
-            ->orderBy('start', 'asc')
-            ->get()
+            ->orderBy('start', 'asc');
+        if ($request->has('room_id')) {
+            $query = $query->where('room_id', '=', $request->room_id);
+        }
+        $bookings = $query->get()
             ->makeHidden(['guests', 'room_id']);
+
 
         return response()->json([
             'message' => 'Bookings successfully retrieved',
-            'data' => $bookings,
-            'message' => 'Rooms successfully retrieved',
-            'data' => $bookings,
+            'data' => $bookings
         ], 201);
     }
     public function create(Request $request)
@@ -73,21 +62,22 @@ class BookingAPIController extends Controller
             ], 400);
         }
 
-
-        $existingBookings = Booking::where('room_id', $request->room_id)->get();
-        foreach ($existingBookings as $existingBooking) {
-            if (!DateService::isDateAvailable($existingBooking, $request)) {
-                return response()->json([
-                    'message' => 'Room unavailable for the chosen dates',
-                ], 400);
-            }
-        }
         $booking = new Booking;
         $booking->room_id = $request->room_id;
         $booking->customer = $request->customer;
         $booking->guests = $request->guests;
         $booking->start = $request->start;
         $booking->end = $request->end;
+
+
+        $existingBookings = Booking::where('room_id', $request->room_id)->get();
+        foreach ($existingBookings as $existingBooking) {
+            if (!DateService::isDateAvailable($existingBooking, $booking)) {
+                return response()->json([
+                    'message' => 'Room unavailable for the chosen dates',
+                ], 400);
+            }
+        }
 
         $booking->save();
 
