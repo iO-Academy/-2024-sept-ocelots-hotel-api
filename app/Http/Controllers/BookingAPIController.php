@@ -80,4 +80,50 @@ class BookingAPIController extends Controller
             'data' => $booking,
         ], 201);
     }
+
+    public function report()
+    {
+        $rooms = HotelRoom::with('booking')
+            ->get();
+        $reportData = [];
+
+        foreach ($rooms as $room) {
+            $bookingCount = 0;
+            $bookingTotalDuration = 0;
+            $bookingsInRoom = $room->Booking;
+            $roomID = $room->id;
+            $roomName = $room->name;
+
+            if (!$room->bookings) $reportData[] = ([
+                'id'=>$roomID,
+                'name'=>$roomName,
+                'booking_count'=>0,
+                'average_booking_duration'=>0
+            ]);
+
+            foreach ($bookingsInRoom as $booking) {
+                $bookingCount++;
+                $bookingDuration = (strtotime($booking->end)) - (strtotime($booking->start));
+                $durationInDays = (((($bookingDuration) / 60) / 60) / 24);
+                $bookingTotalDuration += $bookingTotalDuration + $durationInDays;
+            }
+
+            if ($bookingCount == 0) {
+                $bookingAverageDuration = $bookingTotalDuration / $bookingCount;
+                $reportData[] = [
+                    'id' => $roomID,
+                    'name' => $roomName,
+                    'booking_count' => $bookingCount,
+                    'average_booking_duration' => $bookingAverageDuration
+                ];
+            }
+        }
+
+
+        return response()->json([
+            'message' => 'Report generated',
+            'data' => $reportData
+        ]);
+    }
+
 }
