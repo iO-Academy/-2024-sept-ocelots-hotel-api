@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\HotelRoom;
-use App\Models\Type;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;

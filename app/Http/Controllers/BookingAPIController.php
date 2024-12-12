@@ -14,7 +14,6 @@ class BookingAPIController extends Controller
     {
         $request->validate(['room_id' => 'nullable|exists:hotel_rooms,id']);
 
-
         $query = Booking::with('room:id,name')
             ->where('start', '>=', now())
             ->orderBy('start', 'asc');
@@ -24,12 +23,12 @@ class BookingAPIController extends Controller
         $bookings = $query->get()
             ->makeHidden(['guests', 'room_id']);
 
-
         return response()->json([
             'message' => 'Bookings successfully retrieved',
-            'data' => $bookings
+            'data' => $bookings,
         ], 201);
     }
+
     public function create(Request $request)
     {
         $request->validate([
@@ -39,10 +38,6 @@ class BookingAPIController extends Controller
             'start' => 'required|date',
             'end' => 'required|date',
         ]);
-
-
-
-
 
         if (DateService::isEndDateValid($request->start, $request->end) == false) {
             return response()->json([
@@ -56,7 +51,7 @@ class BookingAPIController extends Controller
         }
         $bookedRoom = HotelRoom::find($request->room_id);
 
-        if (!BookingService::isRoomCapacityValid($bookedRoom, $request->guests)) {
+        if (! BookingService::isRoomCapacityValid($bookedRoom, $request->guests)) {
             return response()->json([
                 'message' => "The {$bookedRoom->name} room can only accommodate between {$bookedRoom->min_capacity} and {$bookedRoom->max_capacity} guests",
             ], 400);
@@ -69,10 +64,9 @@ class BookingAPIController extends Controller
         $booking->start = $request->start;
         $booking->end = $request->end;
 
-
         $existingBookings = Booking::where('room_id', $request->room_id)->get();
         foreach ($existingBookings as $existingBooking) {
-            if (!DateService::isDateAvailable($existingBooking, $booking)) {
+            if (! DateService::isDateAvailable($existingBooking, $booking)) {
                 return response()->json([
                     'message' => 'Room unavailable for the chosen dates',
                 ], 400);
