@@ -14,3 +14,5 @@ Route::get('/rooms/{id}', [RoomAPIController::class, 'single']);
 
 Route::get('/bookings', [BookingAPIController::class, 'index']);
 Route::post('/bookings', [BookingAPIController::class, 'create']);
+
+Route::get('/bookings/report', [BookingAPIController::class, 'report']);

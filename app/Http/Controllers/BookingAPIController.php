@@ -28,7 +28,6 @@ class BookingAPIController extends Controller
             'data' => $bookings,
         ], 201);
     }
-
     public function create(Request $request)
     {
         $request->validate([
@@ -80,4 +79,37 @@ class BookingAPIController extends Controller
             'data' => $booking,
         ], 201);
     }
+
+
+
+public function report()
+
+{
+
+    $bookings = HotelRoom::withCount('booking')
+        ->where('id','=','1')
+        ->get();
+//    foreach (Booking::all() as $roomsWithBookings);
+
+
+//        return response()->json([
+//            'message' => 'Report generated',
+//
+//            'data' => [$roomsWithBookings]
+//        ]);
+//    }
+//}
+//
+//}
+//    $query = Booking::with('room:id,name')
+//        ->orderBy('start', 'asc');
+//
+//    $bookings = $query->get()
+//        ->makeHidden(['guests', 'room_id']);
+
+    return response()->json([
+        'message' => 'Bookings successfully retrieved',
+        'data' => $bookings,
+    ], 201);
+}
 }
