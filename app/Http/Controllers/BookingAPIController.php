@@ -41,50 +41,54 @@ class BookingAPIController extends Controller
             'data' => $bookings,
         ], 201);
     }
-
     public function create(Request $request)
     {
         $request->validate([
             'room_id' => 'required|exists:hotel_rooms,id',
             'customer' => 'required|string|max:255',
             'guests' => 'required|integer|min:1',
-            'start' => 'required|date|',
+            'start' => 'required|date',
             'end' => 'required|date',
         ]);
 
-        $booking = new Booking;
-        $booking->room_id = $request->room_id;
-        $booking->customer = $request->customer;
-        $booking->guests = $request->guests;
-        $booking->start = $request->start;
-        $booking->end = $request->end;
-        if (DateService::futureDate($booking->start) == false) {
+
+
+
+
+        if (DateService::isEndDateValid($request->start, $request->end) == false) {
+            return response()->json([
+                'message' => 'Start date must be before the end date',
+            ], 400);
+        }
+        if (DateService::isDateInTheFuture($request->start) == false) {
             return response()->json([
                 'message' => 'Start date must be in the future',
             ], 400);
         }
         $bookedRoom = HotelRoom::find($request->room_id);
 
-        if (DateService::validEndDate($booking->start, $booking->end) == false) {
-            return response()->json([
-                'message' => 'Start date must be before the end date',
-            ], 400);
-        }
-
-        if (!BookingService::isRoomCapacityValid($bookedRoom, $booking->guests)) {
+        if (!BookingService::isRoomCapacityValid($bookedRoom, $request->guests)) {
             return response()->json([
                 'message' => "The {$bookedRoom->name} room can only accommodate between {$bookedRoom->min_capacity} and {$bookedRoom->max_capacity} guests",
             ], 400);
         }
 
-        $existingBookings = Booking::where('room_id', $booking->room_id)->get();
+
+        $existingBookings = Booking::where('room_id', $request->room_id)->get();
         foreach ($existingBookings as $existingBooking) {
-            if (DateService::availableDate($existingBooking, $booking) == false) {
+            if (!DateService::isDateAvailable($existingBooking, $request)) {
                 return response()->json([
                     'message' => 'Room unavailable for the chosen dates',
                 ], 400);
             }
         }
+        $booking = new Booking;
+        $booking->room_id = $request->room_id;
+        $booking->customer = $request->customer;
+        $booking->guests = $request->guests;
+        $booking->start = $request->start;
+        $booking->end = $request->end;
+
         $booking->save();
 
         return response()->json([

@@ -15,7 +15,6 @@ class HotelRoomTest extends TestCase
     public function test_get_rooms_success(): void
     {
         HotelRoom::factory()->create();
-        Type::factory()->create();
         $response = $this->getJson('api/rooms');
 
         $response->assertStatus(200)
