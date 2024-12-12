@@ -12,7 +12,6 @@ class BookingService extends ServiceProvider
         $minCapacity = $room->min_capacity;
         $maxCapacity = $room->max_capacity;
 
-//        dd($maxCapacity);
         if ($guests < $minCapacity)
         {
             return false;

@@ -38,12 +38,16 @@ class BookingTest extends TestCase
 
     public function test_GetBookingByRoom_success(): void
     {
+
         $booking = Booking::factory()->create();
+        $secondBooking = Booking::factory()->create();
         $booking->start='2080-12-31';
         $booking->end='2100-12-31';
+        $secondBooking->start='2080-12-31';
+        $secondBooking->end='2100-12-31';
         $booking->save();
+        $secondBooking->save();
 
-//        HotelRoom::factory()->create();
         $response = $this->getJson('/api/bookings?room_id=1');
         $response->assertStatus(201)
             ->assertJson(function(AssertableJson $json) {
