@@ -94,24 +94,24 @@ class BookingAPIController extends Controller
             $roomID = $room->id;
             $roomName = $room->name;
 
-            if (!$room->bookings) $reportData[] = ([
-                'id'=>$roomID,
-                'name'=>$roomName,
-                'booking_count'=>0,
-                'average_booking_duration'=>0
-            ]);
-
             foreach ($bookingsInRoom as $booking) {
-                $bookingCount ++;
+                $bookingCount++;
                 $bookingDuration = (strtotime($booking->end)) - (strtotime($booking->start));
                 $durationInDays = ((($bookingDuration / 60) / 60) / 24);
                 $bookingTotalDuration += $bookingTotalDuration + $durationInDays;
-            }
-            if ($bookingCount) {
-                $bookingAverageDuration = $bookingTotalDuration / $bookingCount;
-            }
 
+                $bookingAverageDuration = round(($bookingTotalDuration / $bookingCount), 1);
+
+            }
             if ($bookingCount == 0) {
+                $reportData[] = ([
+                    'id' => $roomID,
+                    'name' => $roomName,
+                    'booking_count' => 0,
+                    'average_booking_duration' => 0
+                ]);
+            }
+            if (!$bookingCount == 0) {
 
                 $reportData[] = [
                     'id' => $roomID,
